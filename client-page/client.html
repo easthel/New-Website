@@ -263,17 +263,22 @@
                         <div class="col-md-3 text-end">
                           <button
                             type="button"
-                            class="btn btn-sm btn-outline-primary me-2"
+                            class="btn btn-sm btn-outline-primary me-2 edit-pet-btn"
                             data-bs-toggle="modal"
                             data-bs-target="#editPetModal"
                             title="Edit Pet"
+                            data-pet-id="${pets[i].id}"
+                            data-pet-name="${pets[i].petName}"
+                            data-pet-species="${pets[i].petSpecies}"
+                            data-pet-breed="${pets[i].petBreed}"
                           >
                             <i class="fas fa-edit"></i>
                           </button>
                           <button
                             type="button"
-                            class="btn btn-sm btn-outline-danger"
+                            class="btn btn-sm btn-outline-danger delete-pet-btn"
                             title="Delete Pet"
+                            data-pet-id="${pets[i].id}"
                           >
                             <i class="fas fa-trash"></i>
                           </button>
@@ -284,6 +289,78 @@
 
                   petSection.appendChild(section);
                 }
+
+                // Add event listeners to delete buttons after they are created
+                const deleteButtons =
+                  document.querySelectorAll(".delete-pet-btn");
+                deleteButtons.forEach((button) => {
+                  button.addEventListener("click", async function () {
+                    const petId = this.getAttribute("data-pet-id");
+                    const petName =
+                      this.closest(".card-body").querySelector(
+                        "h5"
+                      ).textContent;
+
+                    if (
+                      confirm(`Are you sure you want to delete ${petName}?`)
+                    ) {
+                      try {
+                        const { error } = await supabasePublicClient
+                          .from("profile-pets")
+                          .delete()
+                          .eq("id", petId);
+
+                        if (error) {
+                          alert("Error deleting pet: " + error.message);
+                        } else {
+                          // Remove the pet card from the DOM
+                          this.closest(".card-body").parentElement.remove();
+                          alert(`${petName} was deleted successfully!`);
+                        }
+                      } catch (err) {
+                        console.error("Error deleting pet:", err);
+                        alert("An error occurred while deleting the pet.");
+                      }
+                    }
+                  });
+                });
+
+                // Add event listeners to edit buttons
+                const editButtons = document.querySelectorAll(".edit-pet-btn");
+                editButtons.forEach((button) => {
+                  button.addEventListener("click", function () {
+                    // Get pet data from button attributes
+                    const petId = this.getAttribute("data-pet-id");
+                    const petName = this.getAttribute("data-pet-name");
+                    const petSpecies = this.getAttribute("data-pet-species");
+                    const petBreed = this.getAttribute("data-pet-breed");
+
+                    // Set values in edit form
+                    document.querySelector(
+                      '#editPetForm input[name="petName"]'
+                    ).value = petName;
+
+                    // Find and select the correct option in the species dropdown
+                    const speciesSelect = document.querySelector(
+                      '#editPetForm select[name="petSpecies"]'
+                    );
+                    for (let i = 0; i < speciesSelect.options.length; i++) {
+                      if (speciesSelect.options[i].value === petSpecies) {
+                        speciesSelect.selectedIndex = i;
+                        break;
+                      }
+                    }
+
+                    document.querySelector(
+                      '#editPetForm input[name="petBreed"]'
+                    ).value = petBreed;
+
+                    // Store the pet ID in a data attribute on the form for later use
+                    document
+                      .getElementById("editPetForm")
+                      .setAttribute("data-pet-id", petId);
+                  });
+                });
               };
             </script>
           </div>
@@ -792,10 +869,10 @@
               <div class="mb-3">
                 <label class="form-label">Pet Name</label>
                 <input
+                  id="edit-pet-name"
                   type="text"
                   class="form-control"
                   name="petName"
-                  value="Max"
                   required
                   title="Pet Name"
                   placeholder="Enter your pet's name"
@@ -804,22 +881,23 @@
               <div class="mb-3">
                 <label class="form-label">Species</label>
                 <select
+                  id="edit-pet-species"
                   class="form-select"
                   name="petSpecies"
                   required
                   title="Pet Species"
                 >
-                  <option value="dog" selected>Dog</option>
+                  <option value="dog">Dog</option>
                   <option value="cat">Cat</option>
                 </select>
               </div>
               <div class="mb-3">
                 <label class="form-label">Breed</label>
                 <input
+                  id="edit-pet-breed"
                   type="text"
                   class="form-control"
                   name="petBreed"
-                  value="Golden Retriever"
                   required
                   title="Pet Breed"
                   placeholder="Enter your pet's breed"
@@ -837,6 +915,57 @@
             </button>
             <button type="button" class="btn btn-primary" id="updatePet">
               Save Changes
+              <script>
+                const btnUpdatePet = document.querySelector("#updatePet");
+
+                btnUpdatePet.onclick = async function () {
+                  const editPetForm = document.getElementById("editPetForm");
+                  const petId = editPetForm.getAttribute("data-pet-id");
+                  const editPetName = document.querySelector("#edit-pet-name");
+                  const editPetSpecies =
+                    document.querySelector("#edit-pet-species");
+                  const editPetBreed =
+                    document.querySelector("#edit-pet-breed");
+
+                  const supabasePublicClient = supabase.createClient(
+                    "https://zehjuqavoktgxjqwcqpo.supabase.co",
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplaGp1cWF2b2t0Z3hqcXdjcXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYyMDA2ODAsImV4cCI6MjA2MTc3NjY4MH0.n2Nb0QgaZFVW4zC0NyQGAy38tka_gwkhiTrBC8rU-GM",
+                    { db: { schema: "public" } }
+                  );
+
+                  try {
+                    const { data, error } = await supabasePublicClient
+                      .from("profile-pets")
+                      .update({
+                        petName: editPetName.value,
+                        petSpecies: editPetSpecies.value,
+                        petBreed: editPetBreed.value,
+                      })
+                      .eq("id", petId)
+                      .select("*");
+
+                    if (error) {
+                      alert("Error updating pet: " + error.message);
+                    } else {
+                      // Close modal
+                      const modal = bootstrap.Modal.getInstance(
+                        document.getElementById("editPetModal")
+                      );
+                      modal.hide();
+
+                      // Reload page to show updated pet information
+                      window.location.reload();
+
+                      alert("Pet information updated successfully!");
+                    }
+                  } catch (err) {
+                    console.error("Error updating pet:", err);
+                    alert(
+                      "An error occurred while updating the pet information."
+                    );
+                  }
+                };
+              </script>
             </button>
           </div>
         </div>
@@ -904,19 +1033,6 @@
             // Redirect to login page
             window.location.href = "login.html";
           }
-        });
-
-        // Handle pet deletion
-        const deleteButtons = document.querySelectorAll(".btn-outline-danger");
-        deleteButtons.forEach((button) => {
-          button.addEventListener("click", function () {
-            const petCard = this.closest(".card");
-            const petName = petCard.querySelector("h5").textContent;
-
-            if (confirm(`Are you sure you want to delete ${petName}?`)) {
-              petCard.remove();
-            }
-          });
         });
 
         // Handle appointment scheduling

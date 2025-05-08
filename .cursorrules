@@ -1,0 +1,13 @@
+database = supabase
+
+project url = "https://zehjuqavoktgxjqwcqpo.supabase.co"
+anon key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplaGp1cWF2b2t0Z3hqcXdjcXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYyMDA2ODAsImV4cCI6MjA2MTc3NjY4MH0.n2Nb0QgaZFVW4zC0NyQGAy38tka_gwkhiTrBC8rU-GM"
+schema = public
+
+table name
+  - profile-pets
+attribute/s
+  - id
+  - petName
+  - petSpecies
+  - petBreed
