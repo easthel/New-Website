@@ -99,7 +99,7 @@ main {
 .hero {
     text-align: center;
     margin-bottom: 40px;
-    background-image: url(4a487027-0e0e-408d-a185-b14bd7a3d5d8.jpg);
+    background-image: url(img/catdog.jpg);
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -177,7 +177,7 @@ main {
         gap: 15px;
         padding: 15px;
     }
-    
+
     .mobile-menu-btn {
         display: block;
         position: fixed;
@@ -185,7 +185,7 @@ main {
         right: 20px;
         z-index: 1001;
     }
-    
+
     .navbar {
         position: fixed;
         top: 0;
@@ -205,24 +205,24 @@ main {
         flex-direction: column;
         gap: 20px;
     }
-    
+
     .brand-name {
         font-size: 1.5rem;
     }
-    
+
     .hero {
         padding: 60px 20px;
     }
-    
+
     .hero h1 {
         font-size: 2rem;
     }
-    
+
     .hero p {
         font-size: 1rem;
         margin-bottom: 20px;
     }
-    
+
     .btn-primary {
         font-size: 1rem;
         padding: 12px 30px;
@@ -288,7 +288,7 @@ main {
         grid-template-columns: 1fr;
         gap: 20px;
     }
-    
+
     .service-card {
         padding: 20px;
     }
@@ -344,13 +344,13 @@ main {
         flex-direction: column;
         gap: 30px;
     }
-    
+
     .about-image {
         width: 100%;
         max-width: 500px;
         margin: 0 auto;
     }
-    
+
     .about-text {
         text-align: center;
     }
@@ -452,15 +452,15 @@ main {
     .contact-info {
         grid-template-columns: 1fr;
     }
-    
+
     .contact-methods {
         order: 2;
     }
-    
+
     .contact-map {
         order: 1;
     }
-    
+
     .social-links {
         flex-direction: column;
     }
