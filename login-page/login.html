@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Form</title>
     <link rel="stylesheet" href="/login-page/login.css" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
   </head>
   <body>
     <div class="container">
       <!-- <form class="login-form" action="/client-page/client.html" method="POST"> -->
-      <form id="form" class="login-form">
+      <form class="login-form" action="/client-page/client.html">
         <a href="/index.html" atl
           ><img src="/img/logo.png" alt="Back" class="logo"
         /></a>
@@ -37,7 +36,7 @@
           />
         </div>
 
-        <button type="submit" class="login-btn">Login</button>
+        <a class="login-btn" href="/client-page/client.html">Login</a>
         <!-- <button type="submit">Login</button> -->
         <p class="register">
           Not Registered?
@@ -45,48 +44,5 @@
         </p>
       </form>
     </div>
-    <p
-      id="login-error"
-      style="color: red; text-align: center; display: none"
-    ></p>
-    <script>
-      // Initialize Supabase client
-      const supabasePublicClient = supabase.createClient(
-        "https://zehjuqavoktgxjqwcqpo.supabase.co",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InplaGp1cWF2b2t0Z3hqcXdjcXBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYyMDA2ODAsImV4cCI6MjA2MTc3NjY4MH0.n2Nb0QgaZFVW4zC0NyQGAy38tka_gwkhiTrBC8rU-GM",
-        { db: { schema: "public" } }
-      );
-
-      // Handle form submission
-      document
-        .getElementById("form")
-        .addEventListener("submit", async function (e) {
-          e.preventDefault();
-          const email = document.getElementById("username").value;
-          const password = document.getElementById("password").value;
-          const errorElem = document.getElementById("login-error");
-          errorElem.style.display = "none";
-
-          // Query the user_settings table for a matching email and password
-          const { data, error } = await supabasePublicClient
-            .from("user_settings")
-            .select("*")
-            .eq("email", email)
-            .eq("password", password)
-            .single();
-
-          if (error || !data) {
-            errorElem.textContent = "Invalid email or password.";
-            errorElem.style.display = "block";
-          } else {
-            // Store user info in localStorage
-            localStorage.setItem("user_fullName", data.fullName);
-            localStorage.setItem("user_email", data.email);
-            localStorage.setItem("user_phone", data.phone);
-            // Redirect to client.html on successful login
-            window.location.href = "/client-page/client.html";
-          }
-        });
-    </script>
   </body>
 </html>
