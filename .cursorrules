@@ -5,9 +5,11 @@ anon key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 schema = public
 
 table name
-  - profile-pets
+  - user-settings
 attribute/s
-  - id
-  - petName
-  - petSpecies
-  - petBreed
+  - id              UUID
+  - fullName        text
+  - email           text
+  - phone           text
+  - address         text
+  - password        text
